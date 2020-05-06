@@ -26,7 +26,7 @@ def gen_script(dataset_list, output_dir):
                '?q=*:*&wt=json&facet=true&fq=type:File&sort=id%20asc' \
                '&rows={rows}&shards={shards}&fq=dataset_id:{dataset_id}'
 
-    wget_list = []
+    file_list = []
     for dataset_id in dataset_list:
         # Query for the number of files
         query = query_url.format(rows=1, shards=solr_shards, dataset_id=dataset_id)
@@ -45,17 +45,28 @@ def gen_script(dataset_list, output_dir):
             for url in file_info['url']:
                 url_split = url.split('|')
                 if url_split[2] == "HTTPServer":
-                    wget_list.append(dict(filename=filename, 
+                    file_list.append(dict(filename=filename, 
                                           url=url_split[0], 
                                           checksum_type=checksum_type, 
                                           checksum=checksum))
                     break
-    
-    # for f in wget_list:
-    #     print('{url}'.format(url=f['url']))
 
     # Build wget script
+    timestamp = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
 
+    script_loader = jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__),'wget-template.sh'))
+    script_env = jinja2.Environment(loader=script_loader)
+    script_template = script_env.get_template('')
+
+    wget_script = script_template.render(timestamp=timestamp,
+                                         datasets=dataset_list,
+                                         files=file_list)
+
+
+    script_filename = datetime.datetime.now().strftime("wget-%Y%m%d%H%M%S.sh")
+    script_filepath = os.path.join(output_dir, script_filename)
+    with open(script_filepath,'w') as f:
+        print(wget_script, file=f)
 
 def main():
 
