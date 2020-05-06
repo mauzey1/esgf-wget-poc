@@ -209,7 +209,7 @@ remove_from_cache() {
 }
 
 download() {
-    wget="wget ${insecure:+--no-check-certificate} ${quiet:+-q} ${quiet:--v} -c ${force_TLSv1:+--secure-protocol=TLSv1} $PKI_WGET_OPTS"
+    wget="wget ${quiet:+-q} ${quiet:--v}"
     
     while read line
     do
