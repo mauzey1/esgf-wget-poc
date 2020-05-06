@@ -115,7 +115,7 @@ while getopts ':c:pfF:o:w:isuUndvqhHI:T' OPT; do
     case $OPT in
         F) input_file="$OPTARG";;       #<file> : read input from file instead of the embedded one (use - to read from stdin)
         w) output="$OPTARG";;           #<file> : Write embedded files into a file and exit
-        u) update=1;;                   #       : Issue the search again and see if something has changed.
+        U) update_files=1;;             #       : Update files from server overwriting local ones (detect with -u)
         n) dry_run=1;;                  #       : Don't download any files, just report.
         p) clean_work=0;;               #       : preserve data that failed checksum
         d) debug=1;;                    #       : display debug information
