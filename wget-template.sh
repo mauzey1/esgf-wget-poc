@@ -118,7 +118,8 @@ while getopts ':c:pfF:o:w:isuUndvqhHI:T' OPT; do
         U) update_files=1;;             #       : Update files from server overwriting local ones (detect with -u)
         n) dry_run=1;;                  #       : Don't download any files, just report.
         p) clean_work=0;;               #       : preserve data that failed checksum
-        d) debug=1;;                    #       : display debug information
+        d) verbose=1;debug=1;;          #       : display debug information
+        v) verbose=1;;                  #       : be more verbose
         q) quiet=1;;                    #       : be less verbose
         h) usage && exit 0;;            #       : displays this help
         \?) echo "Unknown option '$OPTARG'" >&2 && usage && exit 1;;
@@ -331,6 +332,17 @@ dedup_cache_() {
 #
 # MAIN
 #
+
+echo "Running $(basename $0) version: $version"
+((verbose)) && echo "we use other tools in here, don't try to user their proposed 'options' directly"
+echo "Use $(basename $0) -h for help."$'\n'
+
+cat <<'EOF-MESSAGE'
+Script created for {{files|count}} file(s)
+(The count won't match if you manually edit this file!)
+
+EOF-MESSAGE
+sleep 1
 
 download
 
